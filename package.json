@@ -1,0 +1,23 @@
+{
+    "name": "pokebot",
+    "description": "Fun Pokemon questions to test your knowledge!",
+    "version": "1.0",
+    "author": "CatboyDark",
+    "license": "MIT",
+    "homepage": "",
+    "main": "start.js",
+    "type": "module",
+    "engines": {
+        "node": ">=20.16.0",
+        "pnpm": ">=9.9.0",
+        "npm": "forbidden, use pnpm instead",
+        "yarn": "forbidden, use pnpm instead",
+        "bun": "forbidden, use pnpm instead"
+    },
+    "dependencies": {
+        "discord.js": "^14.17.3"
+    },
+    "devDependencies": {
+        "eslint": "^9.17.0"
+    }
+}
