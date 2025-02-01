@@ -61,7 +61,6 @@ async function getEmoji(name) {
 	const url = `https://discord.com/api/v10/applications/${appID}/emojis`;
 
 	try {
-		const { default: fetch } = await import('node-fetch');
 		const response = await fetch(url, {
 			headers: {
 				Authorization: `Bot ${token}`
@@ -83,6 +82,53 @@ async function getEmoji(name) {
 	}
 }
 
+async function randomPoke() {
+	const getPokeList = await fetch('https://pokeapi.co/api/v2/pokemon/');
+	const pokeList = await getPokeList.json();
+	const randomPokeID = Math.floor(Math.random() * pokeList.count) + 1;
+
+	const getPoke = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomPokeID}`);
+	const poke = await getPoke.json();
+
+	return poke;
+}
+
+function format(poke) {
+	return poke.split(/(\W+)/).map((word, index) => {
+		if (index % 2 === 0) { return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); }
+		return word;
+	})
+	.join('');
+}
+
+async function getRegion(pokeID) {
+	const genMap = [
+		{ generation: 'generation-i', region: 'Kanto' },
+		{ generation: 'generation-ii', region: 'Johto' },
+		{ generation: 'generation-iii', region: 'Hoenn' },
+		{ generation: 'generation-iv', region: 'Sinnoh' },
+		{ generation: 'generation-v', region: 'Unova' },
+		{ generation: 'generation-vi', region: 'Kalos' },
+		{ generation: 'generation-vii', region: 'Alola' },
+		{ generation: 'generation-viii', region: 'Galar' }
+	];
+
+	try {
+		const getPoke = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeID}`);
+		const poke = await getPoke.json();
+
+		const getSpecies = await fetch(poke.species.url);
+		const species = await getSpecies.json();
+
+		const generation = species.generation.name;
+		const region =  genMap.find(item => item.generation === generation);
+
+		return region ? region.region : 'Unknown';
+	}
+	catch (e) {
+		console.log(e);
+	}
+}
 
 export 
 {
@@ -90,5 +136,8 @@ export
 	writeConfig,
 	toggleConfig,
 	readLogic,
-	getEmoji
+	getEmoji,
+	randomPoke,
+	format,
+	getRegion
 };
